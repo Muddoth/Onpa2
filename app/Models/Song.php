@@ -15,24 +15,11 @@ class Song extends Model
         'name',
         'artist',
         'album',
-        'genre',
+        'tags',
         'file_path',
         'image_path'
     ];
 
-    protected $casts = [
-        'genre' => 'array',
-    ];
-
-    public function scopeOfGenre($query, $genre)
-    {
-        if ($genre === 'all' || empty($genre)) {
-            return $query;
-        }
-
-        // Use JSON_CONTAINS for MySQL JSON column to check if genre exists in JSON array
-        return $query->whereJsonContains('genre', $genre);
-    }
 
     public function playlists()
     {

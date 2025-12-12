@@ -29,9 +29,19 @@ class SongSeeder extends Seeder
             $randomImages = collect(glob(public_path('images/songs/random/*.{jpg,jpeg,png,gif}'), GLOB_BRACE));
             // Extract the unique code after the last dash
             $fileNameWithoutExt = pathinfo($audioFile, PATHINFO_FILENAME);
-            $parts = explode(' - ', $fileNameWithoutExt);
-            $code = end($parts); // e.g. 8081721761877750
-            $songName = $parts[0] ?? $fileNameWithoutExt;
+            // Split by underscores
+            $parts = explode('_', $fileNameWithoutExt);
+
+            $code = end($parts); // last part = unique code
+
+            // Song name = everything except the last part joined back with underscores
+            array_pop($parts);  // remove last element (the code)
+
+            $songName = implode('_', $parts);
+
+            // Optional: replace underscores with spaces for nicer display
+            $songName = str_replace('_', ' ', $songName);
+
 
             // Find matching image by code
             $imageMatch = collect(glob("$imageFolder/*$code.*"))->first();
@@ -54,7 +64,6 @@ class SongSeeder extends Seeder
             // Attach 1-3 random tags to the song (many-to-many)
             $randomTags = $tags->random(rand(1, 3));
             $song->tags()->attach($randomTags->pluck('id'));
-
 
             $count++;
         }

@@ -20,10 +20,10 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
+            TagSeeder::class,
             RoleSeeder::class,
             UserProfileSeeder::class,
             ArtistSeeder::class,
-            TagSeeder::class,
             SongSeeder::class, 
             PlaylistSeeder::class
         ]);
