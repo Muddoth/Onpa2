@@ -13,12 +13,17 @@ class Song extends Model
 
     protected $fillable = [
         'name',
-        'artist',
+        'artist_id',
         'album',
         'tags',
         'file_path',
         'image_path'
     ];
+
+    protected $casts = [
+        'tags' => 'array',
+    ];
+
 
 
     public function playlists()

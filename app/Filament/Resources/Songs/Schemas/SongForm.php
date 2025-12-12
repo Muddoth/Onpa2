@@ -25,21 +25,23 @@ class SongForm
                     ->default(null),
                 TextInput::make('file_path')
                     ->default(null),
-                Select::make('Tags')
+                Select::make('tags')        // lowercase, matches DB column
                     ->label('Tags')
                     ->options(Tag::all()->pluck('name', 'id')->toArray())
-                    ->default(fn($record) => $record ? $record->tags->pluck('id')->toArray() : [])
-                    ->multiple()           // enable multi-selection
+                    ->multiple()
                     ->searchable()
                     ->preload()
-                    ->placeholder('Select Tags'),
-                Select::make('Artist')
-                    ->label('Artists')
+                    ->placeholder('Select tags')
+                    ->default(fn($record) => $record ? json_decode($record->tags ?? '[]') : []),
+
+                Select::make('artist_id')   // foreign key column
+                    ->label('Artist')
                     ->options(Artist::all()->pluck('name', 'id')->toArray())
-                    ->default(fn($record) => $record ? $record->artist_id : null)
                     ->searchable()
                     ->preload()
-                    ->placeholder('Select Artists'),
+                    ->default(fn($record) => $record ? $record->artist_id : null)
+                    ->placeholder('Select Artist'),
+
             ]);
     }
 }
