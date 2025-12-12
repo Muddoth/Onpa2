@@ -2,13 +2,16 @@
 
 namespace App\Filament\Resources\Songs\Schemas;
 
-use App\Models\Artist;
 use App\Models\Tag;
+use App\Models\Artist;
 use Filament\Schemas\Schema;
+use Filament\Forms\Components\Html;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
+use Filament\Schemas\Components\View;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Placeholder;
+
 
 class SongForm
 {
@@ -23,8 +26,26 @@ class SongForm
                     ->disk('public'),         // future-proof
                 TextInput::make('album')
                     ->default(null),
-                TextInput::make('file_path')
-                    ->default(null),
+                Select::make('artist_id')   // foreign key column
+                    ->label('Artist')
+                    ->options(Artist::all()->pluck('name', 'id')->toArray())
+                    ->searchable()
+                    ->preload()
+                    ->default(fn($record) => $record ? $record->artist_id : null)
+                    ->placeholder('Select Artist'),
+                // Upload audio file input
+                FileUpload::make('file_path')
+                    ->label('Audio File')
+                    ->directory('audio')     // storage/app/public/audio
+                    ->disk('public')
+                    ->acceptedFileTypes(['audio/mpeg', 'audio/mp3', 'audio/wav']) // restrict to audio
+                    ->maxSize(10240), // max size in KB (10 MB)
+                // Show audio player preview if file_path exists
+                View::make('components.audio_-player')
+                    ->viewData(fn($get) => [
+                        'filePath' => $get('file_path'),
+                    ])
+                    ->visible(fn($get) => !empty($get('file_path'))),
                 Select::make('tags')        // lowercase, matches DB column
                     ->label('Tags')
                     ->options(Tag::all()->pluck('name', 'id')->toArray())
@@ -34,13 +55,7 @@ class SongForm
                     ->placeholder('Select tags')
                     ->default(fn($record) => $record ? json_decode($record->tags ?? '[]') : []),
 
-                Select::make('artist_id')   // foreign key column
-                    ->label('Artist')
-                    ->options(Artist::all()->pluck('name', 'id')->toArray())
-                    ->searchable()
-                    ->preload()
-                    ->default(fn($record) => $record ? $record->artist_id : null)
-                    ->placeholder('Select Artist'),
+
 
             ]);
     }
