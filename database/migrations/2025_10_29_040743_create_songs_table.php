@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('image_path')->nullable();
             $table->string('album')->nullable();
             $table->string('file_path')->nullable();
-            $table->json('tags')->nullable();
+            $table->json('tags_cache')->nullable(); // 🔹 cached IDs
             $table->foreignId('artist_id')
                 ->nullable()
                 ->constrained('artists')

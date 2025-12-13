@@ -12,12 +12,13 @@ class SongSeeder extends Seeder
 {
     public function run(): void
     {
-        $audioFolder = public_path('audio');
-        $imageFolder = public_path('images/songs');
+        $audioFolder = storage_path('app/public/audio');
+        $imageFolder = storage_path('app/public/images/songs');
         $faker = Faker::create();
 
         $artists = Artist::all();
-        $tags = Tag::all();  // Get all tags
+        $tags = Tag::all();
+
 
         $audioFiles = collect(scandir($audioFolder))
             ->filter(fn($f) => !in_array($f, ['.', '..']) && pathinfo($f, PATHINFO_EXTENSION) === 'mp3')
@@ -26,7 +27,9 @@ class SongSeeder extends Seeder
         $count = 0;
 
         foreach ($audioFiles as $audioFile) {
-            $randomImages = collect(glob(public_path('images/songs/random/*.{jpg,jpeg,png,gif}'), GLOB_BRACE));
+            $randomImages = collect(
+                glob(storage_path('app/public/images/songs/random/*.{jpg,jpeg,png,gif}'), GLOB_BRACE)
+            );
             // Extract the unique code after the last dash
             $fileNameWithoutExt = pathinfo($audioFile, PATHINFO_FILENAME);
             // Split by underscores
@@ -53,17 +56,19 @@ class SongSeeder extends Seeder
 
             $artist = $artists->random();
 
+            $randomTags = $tags->random(rand(1, 3));
+
             $song = Song::create([
                 'name' => $songName,
-                'artist_id' => $artist->id, // ✅ link song → artist
+                'artist_id' => $artist->id,
                 'album' => $faker->words(2, true),
                 'file_path' => 'audio/' . $audioFile,
                 'image_path' => $imagePath,
             ]);
 
-            // Attach 1-3 random tags to the song (many-to-many)
-            $randomTags = $tags->random(rand(1, 3));
-            $song->tags()->attach($randomTags->pluck('id'));
+            $song->tags()->sync($randomTags->pluck('id'));
+            $song->syncTagsCache();
+
 
             $count++;
         }

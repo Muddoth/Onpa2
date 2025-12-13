@@ -15,13 +15,13 @@ class Song extends Model
         'name',
         'artist_id',
         'album',
-        'tags',
+        'tags_cache',
         'file_path',
         'image_path'
     ];
 
     protected $casts = [
-        'tags' => 'array',
+        'tags_cache' => 'array',
     ];
 
 
@@ -39,5 +39,12 @@ class Song extends Model
     public function artist()
     {
         return $this->belongsTo(Artist::class);
+    }
+
+    public function syncTagsCache()
+    {
+        $this->updateQuietly([
+            'tags_cache' => $this->tags()->pluck('id')->toArray(),
+        ]);
     }
 }

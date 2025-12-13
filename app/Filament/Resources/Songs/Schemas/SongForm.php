@@ -48,6 +48,7 @@ class SongForm
                     ->visible(fn($get) => !empty($get('file_path'))),
                 Select::make('tags')        // lowercase, matches DB column
                     ->label('Tags')
+                    ->relationship('tags', 'name')
                     ->options(Tag::all()->pluck('name', 'id')->toArray())
                     ->multiple()
                     ->searchable()
