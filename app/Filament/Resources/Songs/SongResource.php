@@ -14,7 +14,9 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+
 
 class SongResource extends Resource
 {
@@ -24,10 +26,37 @@ class SongResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'Song';
 
+    //Permissions and Auth to resources
+    public static function canCreate(): bool
+        {
+            return auth()->user()->can('create songs');
+        }
+
+    public static function canEdit(Model $record): bool
+        {
+            return auth()->user()->can('edit songs');
+        }
+
+    public static function canDelete(Model $record): bool
+        {
+            return auth()->user()->can('delete songs');
+        }
+
+    public static function canView(Model $record): bool
+        {
+            return auth()->user()->can('view songs');
+        }
+
+    // Optional: control navigation visibility
+    public static function shouldRegisterNavigation(): bool
+        {
+            return auth()->user()->can('view songs');
+        }
+
     public static function form(Schema $schema): Schema
     {
         return SongForm::configure($schema);
-    }
+    }   
 
     public static function table(Table $table): Table
     {
