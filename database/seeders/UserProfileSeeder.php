@@ -2,9 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\User;
+use App\Models\Artist;
 use App\Models\Profile;
+use Illuminate\Database\Seeder;
 
 class UserProfileSeeder extends Seeder
 {
@@ -18,13 +19,21 @@ class UserProfileSeeder extends Seeder
         ]);
         $adminUser->assignRole('admin');
 
-        // Create artist
+        // Create artist first
+        $artist = Artist::factory()->create([
+            'name' => 'Artist User',
+        ]);
+
+        // Create user linked to artist (add artist_id in users table or in pivot if needed)
         $artistUser = User::create([
             'name' => 'Artist User',
             'email' => 'artist@example.com',
             'password' => bcrypt('artistpassword123'),
+            // Assuming you add artist_id in users table:
+            'artist_id' => $artist->id,
         ]);
         $artistUser->assignRole('artist');
+
 
         // Create listener
         $listenerUser = User::create([

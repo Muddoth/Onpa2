@@ -13,6 +13,8 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class PlaylistResource extends Resource
 {
@@ -47,4 +49,12 @@ class PlaylistResource extends Resource
             'edit' => EditPlaylist::route('/{record}/edit'),
         ];
     }
+
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->where('profile_id', Auth::user()->profile->id);
+    }
+    
 }

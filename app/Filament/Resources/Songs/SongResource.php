@@ -28,35 +28,44 @@ class SongResource extends Resource
 
     //Permissions and Auth to resources
     public static function canCreate(): bool
-        {
-            return auth()->user()->can('create songs');
-        }
+    {
+        return auth()->user()->can('create songs');
+    }
+
+    protected static function getTableRecordUrlUsing(): ?\Closure
+    {
+        return fn($record) =>
+        auth()->user()->can('update', $record)
+            ? static::getUrl('edit', ['record' => $record])
+            : null;
+    }
+
 
     public static function canEdit(Model $record): bool
-        {
-            return auth()->user()->can('edit songs');
-        }
+    {
+        return auth()->user()->can('edit songs');
+    }
 
     public static function canDelete(Model $record): bool
-        {
-            return auth()->user()->can('delete songs');
-        }
+    {
+        return auth()->user()->can('delete songs');
+    }
 
     public static function canView(Model $record): bool
-        {
-            return auth()->user()->can('view songs');
-        }
+    {
+        return auth()->user()->can('view songs');
+    }
 
     // Optional: control navigation visibility
     public static function shouldRegisterNavigation(): bool
-        {
-            return auth()->user()->can('view songs');
-        }
+    {
+        return auth()->user()->can('view songs');
+    }
 
     public static function form(Schema $schema): Schema
     {
         return SongForm::configure($schema);
-    }   
+    }
 
     public static function table(Table $table): Table
     {

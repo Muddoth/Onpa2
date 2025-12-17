@@ -11,6 +11,7 @@ class CreateSong extends CreateRecord
 
     protected function getRedirectUrl(): string
     {
-        return url('admin/songs');
+        
+        return url()->previous() ?? url('default/fallback');
     }
 }

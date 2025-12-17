@@ -25,10 +25,13 @@ class SongPolicy
         }
 
         // Artist can only edit their own songs
-        if ($user->hasRole('artist') && $user->can('edit songs')) {
-            return $song->artist_name === $user->name;
+        if (
+            $user->hasRole('artist')
+            && $user->can('edit songs')
+            && $user->artist
+        ) {
+            return $song->artist_id === $user->artist->id;
         }
-
         return false;
     }
 
@@ -40,10 +43,19 @@ class SongPolicy
         }
 
         // Artist can only delete their own songs
-        if ($user->hasRole('artist') && $user->can('delete songs')) {
-            return $song->artist_name === $user->name;
+        if (
+            $user->hasRole('artist')
+            && $user->can('delete songs')
+            && $user->artist
+        ) {
+            return $song->artist_id === $user->artist->id;
         }
 
         return false;
+    }
+
+    public function viewAny(User $user): bool
+    {
+        return $user->can('view songs');
     }
 }

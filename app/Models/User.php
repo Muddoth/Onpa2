@@ -51,6 +51,12 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasOne(Profile::class);
     }
 
+    public function artist()
+    {
+        return $this->belongsTo(Artist::class);
+    }
+
+
     public function canAccessPanel(Panel $panel): bool
     {
         if ($panel->getId() === 'admin') {
