@@ -2,9 +2,10 @@
 
 namespace App\Filament\Resources\Artists\Pages;
 
-use App\Filament\Resources\Artists\ArtistResource;
+use Filament\Facades\Filament;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
+use App\Filament\Resources\Artists\ArtistResource;
 
 class EditArtist extends EditRecord
 {
@@ -15,5 +16,11 @@ class EditArtist extends EditRecord
         return [
             DeleteAction::make(),
         ];
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        $panel = Filament::getCurrentPanel();
+        return $panel->getUrl() . '/artists';
     }
 }

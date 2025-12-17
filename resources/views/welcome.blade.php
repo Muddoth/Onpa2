@@ -28,7 +28,7 @@
                     <h1 style="font-weight:bold;
                         font-size: 50px; color: rgb(200, 40, 91); margin-bottom: 30px;">Onpa</h1>
                     <h1 class="mb-1 font-medium">Begin your musical journey!</h1>
-                    <p class="mb-2 text-[#706f6c] dark:text-[#A1A09A]">Onpa has an incredibly rich ecosystem. <br>We suggest starting with the following.</p>
+                    <p class="mb-2 text-[#706f6c] dark:text-[#A1A09A]">Manage your music, shape your sound, <br> and keep everything in sync — all in one place.</p>
                     <ul class="flex flex-col mb-4 lg:mb-6">
                        
                        

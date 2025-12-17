@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Playlists\Pages;
 
+use Filament\Facades\Filament;
 use Illuminate\Support\Facades\Auth;
 use Filament\Resources\Pages\CreateRecord;
 use App\Filament\Resources\Playlists\PlaylistResource;
@@ -15,8 +16,10 @@ class CreatePlaylist extends CreateRecord
         $data['profile_id'] = Auth::user()->profile->id;
         return $data;
     }
+    
     protected function getRedirectUrl(): string
     {
-        return url()->previous() ?? url('default/fallback');
+        $panel = Filament::getCurrentPanel();
+        return $panel->getUrl() . '/playlists';
     }
 }

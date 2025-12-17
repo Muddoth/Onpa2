@@ -2,8 +2,9 @@
 
 namespace App\Filament\Resources\Songs\Pages;
 
-use App\Filament\Resources\Songs\SongResource;
+use Filament\Facades\Filament;
 use Filament\Resources\Pages\CreateRecord;
+use App\Filament\Resources\Songs\SongResource;
 
 class CreateSong extends CreateRecord
 {
@@ -11,7 +12,7 @@ class CreateSong extends CreateRecord
 
     protected function getRedirectUrl(): string
     {
-        
-        return url()->previous() ?? url('default/fallback');
+        $panel = Filament::getCurrentPanel();
+        return $panel->getUrl() . '/songs';
     }
 }

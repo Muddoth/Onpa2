@@ -2,17 +2,18 @@
 
 namespace App\Filament\Resources\Profiles;
 
-use App\Filament\Resources\Profiles\Pages\CreateProfile;
+use BackedEnum;
+use App\Models\Profile;
+use Filament\Tables\Table;
+use Filament\Schemas\Schema;
+use Filament\Facades\Filament;
+use Filament\Resources\Resource;
+use Filament\Support\Icons\Heroicon;
 use App\Filament\Resources\Profiles\Pages\EditProfile;
 use App\Filament\Resources\Profiles\Pages\ListProfiles;
+use App\Filament\Resources\Profiles\Pages\CreateProfile;
 use App\Filament\Resources\Profiles\Schemas\ProfileForm;
 use App\Filament\Resources\Profiles\Tables\ProfilesTable;
-use App\Models\Profile;
-use BackedEnum;
-use Filament\Resources\Resource;
-use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
-use Filament\Tables\Table;
 
 class ProfileResource extends Resource
 {
@@ -21,6 +22,12 @@ class ProfileResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = Heroicon::User;
 
     protected static ?string $recordTitleAttribute = 'Profile';
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        return Filament::getCurrentPanel()?->getId() === 'admin';
+    }
+
 
     public static function form(Schema $schema): Schema
     {

@@ -2,8 +2,9 @@
 
 namespace App\Filament\Resources\Profiles\Pages;
 
-use App\Filament\Resources\Profiles\ProfileResource;
+use Filament\Facades\Filament;
 use Filament\Resources\Pages\CreateRecord;
+use App\Filament\Resources\Profiles\ProfileResource;
 
 class CreateProfile extends CreateRecord
 {
@@ -11,6 +12,7 @@ class CreateProfile extends CreateRecord
 
     protected function getRedirectUrl(): string
     {
-        return url('admin/profiles');
+        $panel = Filament::getCurrentPanel();
+        return $panel->getUrl() . '/profiles';
     }
 }

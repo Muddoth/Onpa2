@@ -36,13 +36,17 @@ class EditSong extends EditRecord
                 ->danger()
                 ->body('You do not have permission to edit this song.')
                 ->send();
-
+                
             $panel = Filament::getCurrentPanel();
-            $baseUrl = $panel->getUrl();
-
-            $this->redirect($baseUrl . '/songs');
+            $this->redirect($panel->getUrl() . '/songs');
 
             return; // ⬅️ IMPORTANT
         }
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        $panel = Filament::getCurrentPanel();
+        return $panel->getUrl() . '/songs';
     }
 }
