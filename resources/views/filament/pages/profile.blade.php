@@ -20,9 +20,7 @@
             <p><strong>Age:</strong> {{ $profile?->age ?? '—' }}</p>
             <p><strong>Gender:</strong> {{ $profile?->gender ?? '—' }}</p>
             <p><strong>Bio:</strong> {{ $profile?->bio ?? '—' }}</p>
-            <p><strong>Favourite Genres:</strong>
-                {{ $profile?->favourite_genres ?? '—' }}
-            </p>
+            <p><strong>Favourite Genres:</strong> {{ $this->favouriteGenresNames ?? '-' }}</p>
 
             <x-filament::button wire:click="edit" class="mt-4">
                 Edit Profile

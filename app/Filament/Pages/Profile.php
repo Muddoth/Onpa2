@@ -3,6 +3,7 @@
 namespace App\Filament\Pages;
 
 use BackedEnum;
+use App\Models\Tag;
 use Filament\Pages\Page;
 use Filament\Schemas\Schema;
 use Filament\Forms\Contracts\HasForms;
@@ -18,12 +19,15 @@ class Profile extends Page implements HasForms
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-user';
     protected static ?string $navigationLabel = 'My Profile';
 
-public bool $editing = false;
+    public bool $editing = false;
     public $user;
+    public array $data = [];
+
 
     public function form(Schema $schema): Schema
     {
-        return ProfileForm::configure($schema);
+        return ProfileForm::configure($schema)
+            ->statePath('data');
     }
 
 
@@ -63,13 +67,39 @@ public bool $editing = false;
 
     public function save(): void
     {
-        $this->form->validate();
+        $data = $this->data;
 
-        $data = $this->form->getState();
-        $this->user->update($data);
+        $this->user->profile()->updateOrCreate(
+            ['user_id' => $this->user->id],
+            [
+                ...$data,
+                'favourite_genres' => json_encode($data['favourite_genres'] ?? []),
+            ]
+        );
 
         $this->editing = false;
 
         $this->notify('success', 'Profile updated successfully!');
+    }
+
+
+    //numbers -> actual tag names
+    public function getFavouriteGenresNamesProperty(): ?string
+    {
+        $state = $this->user->profile?->favourite_genres;
+
+        if (!$state) {
+            return null;
+        }
+
+        $tagIds = is_array($state) ? $state : json_decode($state, true);
+
+        if (!is_array($tagIds)) {
+            return null;
+        }
+
+        return Tag::whereIn('id', $tagIds)
+            ->pluck('name')
+            ->implode(', ');
     }
 }

@@ -23,11 +23,10 @@ class ProfileFactory extends Factory
             'gender' => $this->faker->randomElement(['Male', 'Female', 'Other']),
             'bio' => $this->faker->sentence(10),
             'profile_picture' => $this->faker->imageUrl(200, 200, 'people', true, 'Profile'),
-            'favourite_genres' => implode(', ', $this->faker->randomElements(
+            'favourite_genres' => $this->faker->randomElements(
                 $tagNames,
                 rand(1, min(3, count($tagNames)))
-            )),
+            ),
         ];
     }
 }
-

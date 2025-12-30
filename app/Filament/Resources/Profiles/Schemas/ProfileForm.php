@@ -22,9 +22,6 @@ class ProfileForm
                     ->extraInputAttributes(['style' => 'border-radius: 50%; overflow: hidden;'])
                     ->columnSpanFull()  // <-- makes it take full row
                     ->maxSize(1024),
-                TextInput::make('user_id')
-                    ->required()
-                    ->numeric(),
                 TextInput::make('name')
                     ->required(),
                 TextInput::make('age')
